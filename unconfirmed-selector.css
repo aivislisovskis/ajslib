@@ -1,0 +1,43 @@
+/* SELECTOR */
+
+.selector  {
+    width: 890px;
+    margin-left: 20px;
+    margin-top: 20px;
+    border: 1px #aaa solid;
+    float: left;
+}
+
+.selector .left, .selector .right {
+    float: left;
+    width: 350px;
+    height: 100%;
+    padding: 5px;
+    margin-left: 90px;
+}
+
+.selector .left {
+    border-right: 1px solid #eee;
+}
+
+.selector .right {
+    border-left: 1px solid #eee;
+}
+
+.selector .item {
+    position: relative;
+    min-height: 40px;
+}
+
+.selector .item:hover {
+    background-color: #eee;
+}
+
+.selector .add, .selector .remove {
+    position: absolute;
+    top:0px;
+    width: 80px;
+    left: -85px;
+    margin-top:5px;
+    height: 34px;
+}

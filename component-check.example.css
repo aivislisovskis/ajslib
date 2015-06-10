@@ -1,0 +1,17 @@
+.checkbox {
+    width: 22px;
+    height: 21px;
+    background-image: url('/karalis/img/checkbox.png');
+    background-position:0px 0px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.checkbox.checked {
+    background-position:-22px 0px;
+}
+
+label.clickIcon {
+    cursor: pointer;
+}
