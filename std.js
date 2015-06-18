@@ -1,4 +1,10 @@
-/* 2015.04.17 - Added nval */
+/*
+ v.2.1 by Aivis Lisovskis (c)
+
+ changelog:
+ 2.1- @2015.04.17
+    added nval
+ */
 
 var ___STD_CLASS = false;
 

@@ -8,14 +8,14 @@ var MyForm = function () {
         },
         validateFields = function() {
 
-            var session = error.startSession('*[id^=' + className + '-]');
+            var session = error.startForm();
 
             //--> validate fields!
-            error.validate(session, elements.mail);
-            error.validate(session, elements.password);
+            error.validate(elements.mail, session);
+            error.validate(elements.password, session);
             //--<
 
-            return error.endSession(session);
+            return error.endForm(session);
 
         },
         onCompleted = function (re) {

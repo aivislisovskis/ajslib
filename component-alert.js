@@ -1,9 +1,9 @@
 /*
  v1.0 by Aivis Lisovskis (c)
-*/
+ */
 
 var Alert = function(d) {
-    if(parent===void(0)){parent=false;};var p=this,settings={},events={},elements={},body=false,config={options:{pars:false,'title':'Brīdinājums!', 'text':'', 'className':'default', onClose:function () {}},body:document.body,'close':'Labi', 'className':'default'},data={value:false, passParams:false},accessible={},objects={},publish=function(nameMe,resource,changable){if(changable===void(0)){canChange=false;}else{canChange=changable;};if(accessible[nameMe]!==void(0)){if(changable!==void(0)){accessible[nameMe]['changable']=canChange;}}else{accessible[nameMe]={'changable':canChange}};accessible[nameMe]['value']=resource;},
+    if(parent===void(0)){parent=false;};var p=this,settings={},events={},elements={},body=false,config={options:{pars:false,'title':'', 'text':'', 'className':'default', onClose:function () {}},body:document.body,'close':'Ok!'},data={value:false, passParams:false},accessible={},objects={},publish=function(nameMe,resource,changable){if(changable===void(0)){canChange=false;}else{canChange=changable;};if(accessible[nameMe]!==void(0)){if(changable!==void(0)){accessible[nameMe]['changable']=canChange;}}else{accessible[nameMe]={'changable':canChange}};accessible[nameMe]['value']=resource;},
         create = function () {
             createAlert();
         },
@@ -52,6 +52,10 @@ var Alert = function(d) {
         $(elements.overlay).fadeOut();
     };
 
+    p.update = function () {
+        alert = p.alert;
+    };
+
     p.get=function(nameMe){if(accessible[nameMe]!==void(0)){return accessible[nameMe]['value'];}else{return false;}};p.set=function(nameMe,value){if(accessible[nameMe]!==void(0) && accessible[nameMe]['changable']){accessible[nameMe]['value']=value;return true;}else{return false;}};p.parent=parent;if(typeof(d)!='undefined'){_.sval(config,d);};create();
 };
 
@@ -59,5 +63,4 @@ var _alert;
 
 $(function () {
     _alert = new Alert();
-    alert = _alert.alert;
 });

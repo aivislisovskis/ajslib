@@ -1,5 +1,11 @@
 /*
- v.1.0 by Aivis Lisovskis (c)
+ v.1.1 by Aivis Lisovskis (c)
+
+ changelog:
+    1.1 - @18.06.2015
+        changed startForm (move error message display removal form here to validate)
+        changed order for validate params, session made optional
+        changed names of startSession/endSession to startForm/endForm
  */
 
 var Error = function (d) {
@@ -8,16 +14,14 @@ var Error = function (d) {
 
         };
 
-    p.startSession = function (find) {
-        $(find).removeClass('has-error');
+    p.startForm = function () {
         var c = data.sessions.push(true);
         return c-1;
     };
 
-    p.endSession = function (session) {
-        var c = data.sessions[session];
-        return c;
-    }
+    p.endForm = function (session) {
+        return data.sessions[session];
+    };
 
     p.show = function (element, message, optionals) {
         if (typeof (optionals) == 'undefined') {
@@ -43,14 +47,18 @@ var Error = function (d) {
         }
     };
 
-    p.validate = function (session, element, error, fx) {
-
+    p.validate = function (element, session, error, fx) {
         if (element===void(0)) {
-            _.con('Missing element!');
+            console.info('Missing element!');
             return false;
         }
-        if (typeof(error)=='undefined' || error==false) {
+        if (typeof(error)=='undefined' || error==null) {
             error = $(element).data('error-message');
+        }
+
+        if (element.displayError === void(0) || element.displayError == false) {} else {
+            $(element).removeClass('has-error');
+            element.displayError = false;
         }
 
         var valid = true;
@@ -58,7 +66,7 @@ var Error = function (d) {
         if (typeof(fx)=='undefined') {
             valid = element.checkValidity();
         } else {
-            valid = fx(element);
+            valid = fx.apply(element);
         }
 
         if (valid && element.value!='') {
@@ -70,12 +78,24 @@ var Error = function (d) {
             }
         }
 
+        if (valid && element.value!='') {
+            var len;
+            if (len = $(element).data('maxlength')) {
+                if (element.value.length>len) {
+                    valid = false;
+                }
+            }
+        }
+
         if (valid) {
             p.destroy(element);
             return true;
         } else {
+            element.displayError = true;
             p.show(element, error);
-            data.sessions[session] = false;
+            if (session === void(0) || session == null) {} else {
+                data.sessions[session] = false;
+            }
             return false;
         }
     };

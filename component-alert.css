@@ -1,3 +1,4 @@
+/* --- Basic CSS */
 .alert {
     z-index: 100;
     position: fixed;
@@ -62,12 +63,12 @@
 
 .alert.alert-box, .alert.message-box{
     margin-left:-165px;
-    background-color: transparent;
+    background-color: #fff;
     width: 331px;
     color:#fc323e;
     background-size: 100%;
-    background-image: url('/karalis/img/popup.png');
     height: 148px;
+    border: 1px solid #aaa;
 }
 
 .alert.alert-box .buttonGroup,.alert.message-box .buttonGroup  {
@@ -80,6 +81,8 @@
     right: 8px;
     height: 16px;
     width: 14px;
+    color: #000;
+    border: 1px solid #000;
 }
 
 .alert.alert-box .text {
@@ -113,10 +116,9 @@
 
 .alert.showTitle {
     margin-left:-87px;
-    background-color: transparent;
+    background-color: #fff;
     background-size: 100%;
     width: 244px;
     color:#fc323e;
-    background-image: url('/karalis/img/popup_high.png');
     height: 174px;
 }

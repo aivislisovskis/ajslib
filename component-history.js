@@ -3,7 +3,7 @@
  */
 
 var MyHistory = function (d) {
-    if(parent===void(0)){parent=false;};var p=this,settings={},elements={},body=false,config={body:document.body,'baseUrl':'http://www.kaslauns.lv/lv/'},data={badBrowser:false,forceHash:false,state:false,'links':{},'listeners':{}},accessible={},objects={'albums':[]},publish=function(nameMe,resource,changable){if(changable===void(0)){canChange=false;}else{canChange=changable;};if(accessible[nameMe]!==void(0)){if(changable!==void(0)){accessible[nameMe]['changable']=canChange;}}else{accessible[nameMe]={'changable':canChange}};accessible[nameMe]['value']=resource;},
+    if(parent===void(0)){parent=false;};var p=this,settings={},elements={},body=false,config={body:document.body,'baseUrl':''},data={badBrowser:false,forceHash:false,state:false,'links':{},'listeners':{}},accessible={},objects={'albums':[]},publish=function(nameMe,resource,changable){if(changable===void(0)){canChange=false;}else{canChange=changable;};if(accessible[nameMe]!==void(0)){if(changable!==void(0)){accessible[nameMe]['changable']=canChange;}}else{accessible[nameMe]={'changable':canChange}};accessible[nameMe]['value']=resource;},
         create = function () {
             badBrowser();
             data.state = location.hash.substr(1);
@@ -134,9 +134,8 @@ var MyHistory = function (d) {
     };
 
     p.addAnalytics = function (link) {
-        //_.con('ext');
-        //analytics(link['address']);
-    }
+        analytics(link['address']);
+    };
 
     p.get=function(nameMe){if(accessible[nameMe]!==void(0)){return accessible[nameMe]['value'];}else{return false;}};p.set=function(nameMe,value){if(accessible[nameMe]!==void(0) && accessible[nameMe]['changable']){accessible[nameMe]['value']=value;return true;}else{return false;}};p.parent=parent;if(typeof(d)!='undefined'){_.sval(config,d);};create();
 };

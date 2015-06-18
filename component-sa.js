@@ -1,5 +1,12 @@
 /*
- v.2.0 by Aivis Lisovskis (c)
+ v.2.1 by Aivis Lisovskis (c)
+
+     changelog:
+     2.1- @2015.06.11
+        added 'last' in outer functions;
+        added 'push' as replacement for 'add';
+        added 'search' value for 'each';
+        added 'stopOnCycled' for 'prev' and 'next'
 */
 
 var SA = function (d) {
@@ -32,21 +39,34 @@ var SA = function (d) {
                 add(config.list[a],a);
             }
         },
-        next = function (onlyReturn) {
+        next = function (onlyReturn, stopOnCycled) {
             if (onlyReturn===void(0)) {onlyReturn=false;}
+            if (stopOnCycled===void(0)) {stopOnCycled=false;}
             var result;
             if (data.pointer===false) {
                 if (!onlyReturn) {
-                    result=point()
+                    if (!stopOnCycled) {
+                        result = point()
+                    } else {
+                        result=false;
+                    }
                 } else {
                     return false;
                 }
             } else {
                 if (data.pointer==lastKeyPosition()) {
                     if (!onlyReturn) {
-                        result=point();
+                        if (!stopOnCycled) {
+                            result = point();
+                        } else {
+                            result=false;
+                        }
                     } else {
-                        result=valueByInnerKey(0);
+                        if (!stopOnCycled) {
+                            result=valueByInnerKey(0);
+                        } else {
+                            result=false;
+                        }
                     }
                 } else {
                     if (!onlyReturn) {
@@ -59,23 +79,38 @@ var SA = function (d) {
             }
             return result;
         },
-        previous = function (onlyReturn) {
+        previous = function (onlyReturn, stopOnCycled) {
             if (onlyReturn===void(0)) {
                 onlyReturn=false;
+            }
+            if (stopOnCycled===void(0)) {
+                stopOnCycled=false;
             }
             var result;
             if (data.pointer===false) {
                 if (!onlyReturn) {
-                    result=last()
+                    if (!stopOnCycled) {
+                        result = last();
+                    } else {
+                        result = false;
+                    }
                 } else {
                     return false
                 }
             } else {
                 if (data.pointer<1) {
                     if (!onlyReturn) {
-                        result=last();
+                        if (!stopOnCycled) {
+                            result = last();
+                        } else {
+                            result = false;
+                        }
                     } else {
-                        result=valueByInnerKey(lastKey());
+                        if (!stopOnCycled) {
+                            result = valueByInnerKey(lastKey());
+                        } else {
+                            result = false;
+                        }
                     }
                 } else {
                     if (!onlyReturn) {
@@ -230,20 +265,57 @@ var SA = function (d) {
     p.next = next;
     p.prev = previous;
     p.remove = remove;
-    p.removeKey = removeKey;
     p.current = currentValue;
+    p.last = last;
     p.key = currentKey;
     p.merge = merge;
-    p.add = add;
-    p.read = read;
+    p.push = add;
     p.point = point;
-    p.goTo =
+    p.add = p.push;
 
-        p.each = function(fx) {
+    p.each = function(fx, search) {
+        if (typeof(fx)!=='function') {
+            return false;
+        }
+        if (search === void(0)) {
+            search = null;
+        }
+        var searchValue = true;
+        if (typeof(search)=='string' ||  typeof(search)=='number' || typeof(search)=='boolean' || search===null) {
+            searchValue = String(search);
+        } else {
+            searchValue = false
+        }
+        if (searchValue!==false) {
             for (var a=0; a<data.keys.length; a++) {
-                fx(data.array[data.keys[a]], data.keys[a]);
+                var sItem = data.array[data.keys[a]];
+                if (search!==null) {
+                    if (typeof(sItem)=='string') {
+                        var r = sItem.search(search);
+                        if (r>-1) {
+                            fx(sItem, data.keys[a]);
+                        }
+                    }
+                    if (typeof(sItem)=='number') {
+                        sItem = String(sItem);
+                        var r = sItem.search(search);
+                        if (r>-1) {
+                            fx(sItem, data.keys[a]);
+                        }
+                    }
+                    if (typeof(sItem)=='boolean') {
+                        if (typeof(search)=='boolean') {
+                            if (search==sItem) {
+                                fx(sItem, data.keys[a]);
+                            }
+                        }
+                    }
+                } else {
+                    fx(data.array[data.keys[a]], data.keys[a]);
+                }
             }
-        };
+        }
+    };
 
     p.length = function () {
         return data.keys.length;
