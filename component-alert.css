@@ -2,13 +2,10 @@
 .alert {
     z-index: 100;
     position: fixed;
-    top:100px;
-    margin-left:-250px;
-    width: 500px;
-    left:50%;
+    top: 5%;
     background-color: #fff;
     color: #000;
-    height:150px;
+    height: 150px;
     display: none;
 }
 
@@ -22,7 +19,7 @@
     right: 15px;
     height: 20px;
     width: 20px;
-    background-color: #000;
+    /* background-color: #000; */
     cursor: pointer;
 }
 
@@ -30,12 +27,10 @@
     position: absolute;
     display: inline-block;
     vertical-align: middle;
-    height: 150px;
     top:40px;
     left: 10px;
     width: 480px;
     padding-top: 30px;
-    text-align: center;
 }
 
 .alert .title {
@@ -51,7 +46,7 @@
     cursor: pointer;
     width: 100%;
     height: 100%;
-    background-color: #fff;
+    background-color: #000;
     position: fixed;
     top: 0px;
     left: 0px;
@@ -62,13 +57,17 @@
 /* --- Custom example class */
 
 .alert.alert-box, .alert.message-box{
-    margin-left:-165px;
+    margin: auto;
+    width: 90% !important;
+    /* margin-left: -165px; */
+    margin-left: 5%;
     background-color: #fff;
     width: 331px;
-    color:#fc323e;
     background-size: 100%;
-    height: 148px;
-    border: 1px solid #aaa;
+    height: 90%;
+    overflow: hidden;
+    min-width: 288px;
+    /*border: 1px solid #aaa;*/.alert
 }
 
 .alert.alert-box .buttonGroup,.alert.message-box .buttonGroup  {
@@ -76,28 +75,30 @@
 }
 
 .alert.alert-box .close, .alert.message-box .close {
-    background-color: transparent;
-    top: 8px;
-    right: 8px;
-    height: 16px;
+    position: absolute;
+    top:10px;
+    right: 10px;
     width: 14px;
-    color: #000;
-    border: 1px solid #000;
+    height: 14px;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    display: block;
 }
 
 .alert.alert-box .text {
-    height: 94px;
-    top:24px;
+    top: 24px;
     left: 24px;
-    width: 284px;
     padding-top: 18px;
+    width: 90%;
+    overflow: hidden;
+    min-width: 100px;
 }
 
 .alert.message-box .text {
-    height: 94px;
     top: 41px;
     left: 24px;
-    width: 284px;
+    width: 90%;
     padding-top: 18px;
     text-align: left;
 }
@@ -119,6 +120,18 @@
     background-color: #fff;
     background-size: 100%;
     width: 244px;
-    color:#fc323e;
     height: 174px;
+}
+
+.alert .text {
+    width: auto !important;
+    margin-right: 24px;
+}
+
+.alert.alert-box .close {
+    border: 1px solid #000000;
+}
+
+.alert.alert-box .button {
+    width: 100%;
 }

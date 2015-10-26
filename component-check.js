@@ -1,11 +1,9 @@
 /*
  v1.1 by Aivis Lisovskis (c)
-
  changelog:
  1.1 - @2015.06.17
  added singleton class "Checks" that creates new objects and works with them
  moved configurable options to "Checks" class.
-
  */
 
 /* example HTML
@@ -64,12 +62,18 @@ var Checks = function () {
  * */
 
 var Check = function(d) {
-    if(parent===void(0)){parent=false;};var p=this,settings={},elements={},body=false,config={default:false, body:document.body,'source':false, pars:false},data={value:false},accessible={},objects={},publish=function(nameMe,resource,changable){if(changable===void(0)){canChange=false;}else{canChange=changable;};if(accessible[nameMe]!==void(0)){if(changable!==void(0)){accessible[nameMe]['changable']=canChange;}}else{accessible[nameMe]={'changable':canChange}};accessible[nameMe]['value']=resource;},
+    if(parent===void(0)){parent=false;};var p=this,settings={},elements={},body=false,config={default:false, body:document.body,'source':false, pars:false},data={value:false, trueCheckbox:false},accessible={},objects={},publish=function(nameMe,resource,changable){if(changable===void(0)){canChange=false;}else{canChange=changable;};if(accessible[nameMe]!==void(0)){if(changable!==void(0)){accessible[nameMe]['changable']=canChange;}}else{accessible[nameMe]={'changable':canChange}};accessible[nameMe]['value']=resource;},
         create = function () {
             if (!config.source) {return false;}
             $(config.source).data('check', p);
 
             config.default = $(config.source).data(config.pars['data-default']);
+
+            if (config.source.type!==void(0)) {
+                if (config.source.type=='checkbox') {
+                    data.trueCheckbox = true;
+                }
+            }
 
             if (config.default==null && config.source.checked!=='undefined') {
                 config.default=config.source.checked;
@@ -81,8 +85,9 @@ var Check = function(d) {
                 }
             }
 
-            _.con(config.source.checked);
-            config.source.value = p.value;
+            if (!data.trueCheckbox) {
+                config.source.value = config.default;
+            }
 
             config.source.style.display = 'none';
 
@@ -102,16 +107,24 @@ var Check = function(d) {
 
         },
         checkMe = function () {
+
+            _.con(data.trueCheckbox);
             if (data.value) {
                 $(elements.div).removeClass(config.pars['convert-checked-class']);
                 data.value = false;
-                config.source.value = false;
-                config.source.checked = false;
+                if (data.trueCheckbox) {
+                    config.source.checked = false;
+                } else {
+                    config.source.value = false;
+                }
             } else {
                 $(elements.div).addClass(config.pars['convert-checked-class']);
                 data.value = true;
-                config.source.value = true;
-                config.source.checked = true;
+                if (data.trueCheckbox) {
+                    config.source.checked = true;
+                } else {
+                    config.source.value = true;
+                }
             }
         };
 
