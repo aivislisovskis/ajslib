@@ -1,7 +1,10 @@
 /*
- v.2.1 by Aivis Lisovskis (c)
+ v.2.2 by Aivis Lisovskis (c)
 
      changelog:
+     2.2- @2016.11.03
+        added 'update' in functions and outer functions.
+            Updates value of key without changing pointer (usable for 'each' manipulations)
      2.1- @2015.06.11
         added 'last' in outer functions;
         added 'push' as replacement for 'add';
@@ -230,6 +233,12 @@ var SA = function (d) {
             }
             return false;
         },
+        update = function (key, value) {
+            var keyPos = searchKey(key);
+            if (keyPos!==false) {
+                data.array[data.keys[searchKeyPosition(key)]] = value;
+            }
+        },
         currentValue = function () {
             if (data.pointer!==false) {
                 return data.array[data.keys[data.pointer]];
@@ -261,6 +270,7 @@ var SA = function (d) {
 
     //--> CUSTOM
 
+    p.update = update;
     p.first = first;
     p.next = next;
     p.prev = previous;
