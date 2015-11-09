@@ -1,9 +1,17 @@
 /*
- v1.0 by Aivis Lisovskis (c)
- */
+ v.1.1 by Aivis Lisovskis (c)
 
-var MyHistory = function (d) {
-    if(parent===void(0)){parent=false;};var p=this,settings={},elements={},body=false,config={body:document.body,'baseUrl':''},data={badBrowser:false,forceHash:false,state:false,'links':{},'listeners':{}},accessible={},objects={'albums':[]},publish=function(nameMe,resource,changable){if(changable===void(0)){canChange=false;}else{canChange=changable;};if(accessible[nameMe]!==void(0)){if(changable!==void(0)){accessible[nameMe]['changable']=canChange;}}else{accessible[nameMe]={'changable':canChange}};accessible[nameMe]['value']=resource;},
+ changelog:
+ 1.1 - @09.11.2015
+ changed api name to StdHistory
+ changed base singleton name to HistoryApi
+ changed 'status' function to 'location'
+ added 'search' to event listeners
+ removed test function
+*/
+
+var StdHistory = function (d) {
+    if(parent===void(0)){parent=false;};var p=this,settings={},elements={},body=false,config={body:document.body,'baseUrl':''},data={badBrowser:false,forceHash:false,state:false,'links':{},'listeners':{}, 'filters':{}},accessible={},objects={'albums':[]},publish=function(nameMe,resource,changable){if(changable===void(0)){canChange=false;}else{canChange=changable;};if(accessible[nameMe]!==void(0)){if(changable!==void(0)){accessible[nameMe]['changable']=canChange;}}else{accessible[nameMe]={'changable':canChange}};accessible[nameMe]['value']=resource;},
         create = function () {
             badBrowser();
             data.state = location.hash.substr(1);
@@ -63,8 +71,19 @@ var MyHistory = function (d) {
                 return true;
             } else {
                 for (var a in data.listeners) {
-                    if (data.listeners[a](address)) {
-                        return true;
+                    var valid = false;
+                    if (data.filters[a]) {
+                        if (address.search(data.filters[a])) {
+                            valid = true;
+                        }
+                    } else {
+                        valid = true;
+                    }
+
+                    if (valid) {
+                        if (data.listeners[a](address)) {
+                            return true;
+                        }
                     }
                 }
             }
@@ -80,7 +99,7 @@ var MyHistory = function (d) {
             if(navigator.appName.indexOf("Internet Explorer")!=-1){     //yeah, he's using IE
                 var badBrowser=(
                     navigator.appVersion.indexOf("MSIE 1")==-1  //v10, 11, 12, etc. is fine too
-                    );
+                );
 
                 if(badBrowser){
                     data.badBrowser = true;
@@ -89,8 +108,17 @@ var MyHistory = function (d) {
         }
         ;
 
-    p.loadCurrent = function () {
-        return data.state;
+    p.setBase = function (url) {
+        config.baseUrl = url;
+        publish('base', config.baseUrl,false);
+    };
+
+    p.location = function () {
+        if (data.state == '') {
+            return document.location;
+        } else {
+            return data.state;
+        }
     };
 
     p.navigate = function (params) {
@@ -98,6 +126,10 @@ var MyHistory = function (d) {
             return false;
         }
         add(params);
+
+        if (params.address === void(0)) {
+            params.address = '';
+        }
 
         if (params['hash']!==void(0)) {
             navigateHash(params.address);
@@ -112,7 +144,7 @@ var MyHistory = function (d) {
         }
     };
 
-    p.listen = function (address) {
+    p.call = function (address) {
         goto(address);
     };
 
@@ -123,13 +155,14 @@ var MyHistory = function (d) {
 
     };
 
-    p.test = function (add) {
-        navigate(add);
-    };
-
-    p.addListener = function (listener, call) {
+    p.addListener = function (listener, call, filter) {
         if (data.listeners[listener]===void(0)) {
             data.listeners[listener] = call;
+            if (filter!==void(0)) {
+                data.filters[listener] = filter;
+            } else {
+                data.filters[listener] = false;
+            }
         }
     };
 
@@ -140,5 +173,8 @@ var MyHistory = function (d) {
     p.get=function(nameMe){if(accessible[nameMe]!==void(0)){return accessible[nameMe]['value'];}else{return false;}};p.set=function(nameMe,value){if(accessible[nameMe]!==void(0) && accessible[nameMe]['changable']){accessible[nameMe]['value']=value;return true;}else{return false;}};p.parent=parent;if(typeof(d)!='undefined'){_.sval(config,d);};create();
 };
 
-var historyClass;
+var historyApi;
 
+$(function () {
+    historyApi = new StdHistory();
+});
