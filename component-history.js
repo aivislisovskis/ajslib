@@ -1,14 +1,18 @@
 /*
- v.1.1 by Aivis Lisovskis (c)
+ v.1.2 by Aivis Lisovskis (c)
 
  changelog:
+ 1.2 - @11.11.2015
+ repaired small bugs
+ added test() - just creates some test cases
+ added getBase() - gets current base url
  1.1 - @09.11.2015
  changed api name to StdHistory
  changed base singleton name to HistoryApi
  changed 'status' function to 'location'
  added 'search' to event listeners
  removed test function
-*/
+ */
 
 var StdHistory = function (d) {
     if(parent===void(0)){parent=false;};var p=this,settings={},elements={},body=false,config={body:document.body,'baseUrl':''},data={badBrowser:false,forceHash:false,state:false,'links':{},'listeners':{}, 'filters':{}},accessible={},objects={'albums':[]},publish=function(nameMe,resource,changable){if(changable===void(0)){canChange=false;}else{canChange=changable;};if(accessible[nameMe]!==void(0)){if(changable!==void(0)){accessible[nameMe]['changable']=canChange;}}else{accessible[nameMe]={'changable':canChange}};accessible[nameMe]['value']=resource;},
@@ -25,27 +29,20 @@ var StdHistory = function (d) {
         },
         navigate = function (setData) {
             data.state = setData;
-            //document.location.href = config.baseURL + setData;
             var stateObj = {};
             history.pushState(stateObj, null, config.baseUrl + setData);
             analytics(config.baseUrl + setData);
-            //data.state = history.state;
         },
         navigateReplace = function (setData) {
             data.state = setData;
-            //document.location.href = config.baseURL + setData;
             var stateObj = {};
             history.replaceState(stateObj, null, config.baseUrl + setData);
-            //_.con('called');
-            //_gaq.push(['_trackPageview', config.baseUrl + setData]);
-            //data.state = history.state;
         },
         navigateHash = function (setData) {
             data.state = setData;
             data.forceHash = true;
             parts = document.location.href.split('#');
             document.location.href = parts[0] + '#' + setData;
-            // _.con('calledHash');
         },
         checkIfHashChanges = function () {
             var hash = document.location.hash;
@@ -66,7 +63,7 @@ var StdHistory = function (d) {
             }
         },
         goto = function (address) {
-            if (data.links[address] !==void(0)) {
+            if (data.links[address] !==void(0) && data.links[address].call !== void(0) && data.links[address].call!='') {
                 data.links[address].call(data.links['params']);
                 return true;
             } else {
@@ -108,6 +105,10 @@ var StdHistory = function (d) {
         }
         ;
 
+    p.getBase = function () {
+        return config;
+    }
+
     p.setBase = function (url) {
         config.baseUrl = url;
         publish('base', config.baseUrl,false);
@@ -128,7 +129,7 @@ var StdHistory = function (d) {
         add(params);
 
         if (params.address === void(0)) {
-            params.address = '';
+            params.address = '/';
         }
 
         if (params['hash']!==void(0)) {
@@ -168,6 +169,13 @@ var StdHistory = function (d) {
 
     p.addAnalytics = function (link) {
         analytics(link['address']);
+    };
+
+    p.test = function () {
+        historyApi.navigate({'address':'addr1'});
+        historyApi.navigate({'address':'/addr/2'});
+        historyApi.navigate({'address': 'addr/3/4/5'});
+        historyApi.addListener('testListener', function (add) {console.info(add)});
     };
 
     p.get=function(nameMe){if(accessible[nameMe]!==void(0)){return accessible[nameMe]['value'];}else{return false;}};p.set=function(nameMe,value){if(accessible[nameMe]!==void(0) && accessible[nameMe]['changable']){accessible[nameMe]['value']=value;return true;}else{return false;}};p.parent=parent;if(typeof(d)!='undefined'){_.sval(config,d);};create();
